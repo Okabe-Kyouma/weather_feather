@@ -6,6 +6,7 @@ import 'package:weather_feather/data/data.dart';
 import 'package:weather_feather/model/api_key.dart';
 import 'package:weather_feather/model/categories_model.dart';
 import 'package:weather_feather/model/wallpaper_model.dart';
+import 'package:weather_feather/views/category.dart';
 import 'package:weather_feather/views/search.dart';
 import 'package:weather_feather/widgets/widget.dart';
 
@@ -117,9 +118,20 @@ class _HomeState extends State<Home> {
                   shrinkWrap: true,
                   itemCount: myList.length,
                   itemBuilder: (context, index) {
-                    return CategorieTile(
-                        imgUrl: myList[index].imgUrl,
-                        name: myList[index].categoriesName);
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Category(
+                                category: myList[index].categoriesName),
+                          ),
+                        );
+                      },
+                      child: CategorieTile(
+                          imgUrl: myList[index].imgUrl,
+                          name: myList[index].categoriesName),
+                    );
                   },
                 ),
               ),
