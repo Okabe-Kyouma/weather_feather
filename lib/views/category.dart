@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_feather/model/api_key.dart';
 import 'package:weather_feather/model/wallpaper_model.dart';
@@ -17,10 +18,14 @@ class Category extends StatefulWidget {
 
 class _CategoryState extends State<Category> {
   List<WallpaperModel> wallpapers = [];
+  bool isLoading = true;
 
   void searchQueryWall() async {
+
     String qs = widget.category;
-    Dio dio = new Dio();
+    Dio dio = Dio();
+
+    try{
 
     dio.options.headers['Authorization'] = apiKey;
     final response =
@@ -41,7 +46,33 @@ class _CategoryState extends State<Category> {
       );
     });
 
+    }
+    catch(e){
+       setState(() {
+        isLoading = false;
+      });
+      if (mounted) {
+        showCupertinoDialog(
+            context: context,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: const Text('Error Occurred!'),
+                content: const Text('Please try Again after some time'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Okay'),
+                  ),
+                ],
+              );
+            });
+      }
+    }
+
     setState(() {
+      isLoading = false;
       wallpapers;
     });
   }
@@ -59,15 +90,21 @@ class _CategoryState extends State<Category> {
         title: BrandName(),
         elevation: 0.0,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              wallpapersList(wallpapers, context),
-            ],
-          ),
-        ),
-      ),
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: Colors.black45,
+              ),
+            )
+          : SingleChildScrollView(
+              child: SizedBox(
+                child: Column(
+                  children: [
+                    wallpapersList(wallpapers, context),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 }

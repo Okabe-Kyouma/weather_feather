@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_feather/model/api_key.dart';
 import 'package:weather_feather/model/wallpaper_model.dart';
@@ -17,10 +18,13 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   List<WallpaperModel> wallpapers = [];
+  bool isLoading = true;
 
   void searchQueryWall() async {
     String qs = widget.searchQuery;
-    Dio dio = new Dio();
+    Dio dio = Dio();
+
+   try{
 
     dio.options.headers['Authorization'] = apiKey;
     final response =
@@ -33,7 +37,7 @@ class _SearchState extends State<Search> {
           portrait: ele['src']['portrait']);
 
       wallpapers.add(
-        new WallpaperModel(
+        WallpaperModel(
             photographer: ele['photographer'],
             photographer_id: ele['photographer_id'],
             photographer_url: ele['photographer_url'],
@@ -41,7 +45,32 @@ class _SearchState extends State<Search> {
       );
     });
 
+     }catch(e){
+       setState(() {
+        isLoading = false;
+      });
+      if (mounted) {
+        showCupertinoDialog(
+            context: context,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: const Text('Error Occurred!'),
+                content: const Text('Please try Again after some time'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Okay'),
+                  ),
+                ],
+              );
+            });
+      }
+    }
+
     setState(() {
+      isLoading = false;
       wallpapers;
     });
   }
@@ -59,15 +88,21 @@ class _SearchState extends State<Search> {
         title: BrandName(),
         elevation: 0.0,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              wallpapersList(wallpapers, context),
-            ],
-          ),
-        ),
-      ),
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: Colors.black45,
+              ),
+            )
+          : SingleChildScrollView(
+              child: SizedBox(
+                child: Column(
+                  children: [
+                    wallpapersList(wallpapers, context),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 }

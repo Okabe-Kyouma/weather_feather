@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather_feather/model/wallpaper_model.dart';
+import 'package:weather_feather/views/wallpaper.dart';
 
 Widget BrandName() {
   return const Row(
@@ -18,10 +19,10 @@ Widget BrandName() {
 }
 
 Widget wallpapersList(List<WallpaperModel> wallpapers, context) {
-  return Container(
+  return SizedBox(
     child: GridView.count(
       shrinkWrap: true,
-      physics: ClampingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       crossAxisCount: 2,
       childAspectRatio: 0.6,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -29,12 +30,24 @@ Widget wallpapersList(List<WallpaperModel> wallpapers, context) {
       crossAxisSpacing: 6.0,
       children: wallpapers.map((ele) {
         return GridTile(
-          child: Container(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                ele.src.portrait,
-                fit: BoxFit.cover,
+          child: SizedBox(
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Wallpaper(img: ele.src.portrait),
+                    ));
+              },
+              child: Hero(
+                tag: ele.src.portrait,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    ele.src.portrait,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
           ),
