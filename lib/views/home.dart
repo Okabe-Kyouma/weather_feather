@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import 'package:weather_feather/data/data.dart';
 import 'package:weather_feather/model/api_key.dart';
 import 'package:weather_feather/model/categories_model.dart';
@@ -25,11 +26,14 @@ class _HomeState extends State<Home> {
   TextEditingController searchController = TextEditingController();
   FocusNode focusNode = FocusNode();
   bool isLoading = true;
+  bool fetchMoreData = true;
+  int page = 1;
 
   void getTrendingWallpapers() async {
     try {
       dio.options.headers['Authorization'] = apiKey;
-      final response = await dio.get('https://api.pexels.com/v1/curated');
+      final response = await dio
+          .get('https://api.pexels.com/v1/curated?page=$page&per_page=14');
 
       response.data["photos"].forEach((ele) {
         SrcModel src = SrcModel(
@@ -77,6 +81,55 @@ class _HomeState extends State<Home> {
       isLoading = false;
       wallpapers;
     });
+  }
+
+  void loadMoreWallpapers() async {
+    page++;
+    try {
+      dio.options.headers['Authorization'] = apiKey;
+      final response = await dio
+          .get('https://api.pexels.com/v1/curated?page=$page&per_page=14');
+
+      response.data["photos"].forEach((ele) {
+        SrcModel src = SrcModel(
+            original: ele['src']['original'],
+            small: ele['src']['small'],
+            portrait: ele['src']['portrait']);
+
+        wallpapers.add(
+          WallpaperModel(
+              photographer: ele['photographer'],
+              photographer_id: ele['photographer_id'],
+              photographer_url: ele['photographer_url'],
+              src: src),
+        );
+      });
+
+      setState(() {
+        fetchMoreData = false;
+        wallpapers;
+      });
+    } catch (e) {
+      if (mounted) {
+        showCupertinoDialog(
+            context: context,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: const Text('Error Occurred!'),
+                content: const Text(
+                    'Couldnt Load More data!\nPlease try Again after some time'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Okay'),
+                  ),
+                ],
+              );
+            });
+      }
+    }
   }
 
   @override
@@ -173,7 +226,40 @@ class _HomeState extends State<Home> {
                     const SizedBox(
                       height: 16,
                     ),
-                    wallpapersList(wallpapers, context),
+                    //wallpapersList(wallpapers, context),
+                    SizedBox(
+                      child: GridView.count(
+                        shrinkWrap: true,
+                        physics: const ClampingScrollPhysics(),
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.6,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        mainAxisSpacing: 6.0,
+                        crossAxisSpacing: 6.0,
+                        children: wallpapers.map((ele) {
+                          setState(() {
+                            fetchMoreData = true;
+                          });
+                          return wallpapersList(ele, context);
+                        }).toList(),
+                      ),
+                    ),
+                    if (fetchMoreData)
+                      VisibilityDetector(
+                        key: const Key('loading indicator'),
+                        onVisibilityChanged: (VisibilityInfo info) {
+                          if (info.visibleFraction > 0.8) {
+                            print('loading more data');
+                            loadMoreWallpapers();
+                            fetchMoreData = true;
+                          }
+                        },
+                        child: Center(
+                          child: Container(
+                              margin: const EdgeInsets.symmetric(vertical: 30),
+                              child: const CircularProgressIndicator()),
+                        ),
+                      ),
                   ],
                 ),
               ),

@@ -18,33 +18,24 @@ Widget BrandName() {
   );
 }
 
-Widget wallpapersList(List<WallpaperModel> wallpapers, context) {
-  return SizedBox(
-    child: GridView.count(
-      shrinkWrap: true,
-      physics: const ClampingScrollPhysics(),
-      crossAxisCount: 2,
-      childAspectRatio: 0.6,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      mainAxisSpacing: 6.0,
-      crossAxisSpacing: 6.0,
-      children: wallpapers.map((ele) {
-        return GridTile(
+Widget wallpapersList(WallpaperModel wallpaper, context) {
+
+  return GridTile(
           child: SizedBox(
             child: InkWell(
               onTap: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Wallpaper(img: ele.src.portrait),
+                      builder: (context) => Wallpaper(img: wallpaper.src.portrait),
                     ));
               },
               child: Hero(
-                tag: ele.src.portrait,
+                tag: wallpaper.src.portrait,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    ele.src.portrait,
+                    wallpaper.src.portrait,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -52,7 +43,5 @@ Widget wallpapersList(List<WallpaperModel> wallpapers, context) {
             ),
           ),
         );
-      }).toList(),
-    ),
-  );
+
 }
