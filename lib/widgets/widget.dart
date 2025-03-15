@@ -27,7 +27,7 @@ Widget wallpapersList(WallpaperModel wallpaper, context) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Wallpaper(img: wallpaper.src.portrait),
+                      builder: (context) => MyWallpaper(img: wallpaper.src.portrait),
                     ));
               },
               child: Hero(
