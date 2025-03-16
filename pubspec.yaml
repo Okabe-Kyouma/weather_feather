@@ -41,6 +41,9 @@ dependencies:
   fluttertoast: ^8.2.12
   saver_gallery: ^4.0.1
   permission_handler: ^8.1.1
+  flutter_launcher_icons: ^0.14.3
+  flutter_native_splash: ^2.4.4
+
 
 dev_dependencies:
   flutter_test:
@@ -94,3 +97,24 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/logo/logo2.png"
+  min_sdk_android: 21 
+
+
+
+
+flutter_native_splash:
+  color: "#FFFFFF"  # Background color
+  image: "assets/logo/logo.png"  # Path to your splash image
+  android: true
+  ios: true
+  fullscreen: true
+
+  android_12:
+    color: "#FFFFFF"
+    image: "assets/logo/logo.png"
