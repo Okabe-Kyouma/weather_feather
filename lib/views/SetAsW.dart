@@ -12,7 +12,7 @@ class SetAsW extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Si(
+    return Container(
       height: MediaQuery.of(context).size.height / 3,
       width: double.infinity,
       child: Column(
