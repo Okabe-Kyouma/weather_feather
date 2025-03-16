@@ -86,7 +86,7 @@ class _WallpaperActionState extends State<WallpaperAction> {
                             downloading = false;
                             home = home;
                           });
-                          print("Task Done");
+                          //print("Task Done");
                         },
                   child: Text(home),
                 ),
@@ -101,7 +101,7 @@ class _WallpaperActionState extends State<WallpaperAction> {
                             downloading = false;
                             lock = lock;
                           });
-                          print("Task Done");
+                          //print("Task Done");
                         },
                   child: Text(lock),
                 ),
@@ -116,7 +116,7 @@ class _WallpaperActionState extends State<WallpaperAction> {
                             downloading = false;
                             both = both;
                           });
-                          print("Task Done");
+                          //print("Task Done");
                         },
                   child: Text(both),
                 ),
@@ -131,7 +131,7 @@ class _WallpaperActionState extends State<WallpaperAction> {
                             downloading = false;
                             system = system;
                           });
-                          print("Task Done");
+                          //print("Task Done");
                         },
                   child: Text(system),
                 ),
@@ -152,19 +152,19 @@ class _WallpaperActionState extends State<WallpaperAction> {
         res = data;
         downloading = true;
       });
-      print("DataReceived: " + data);
+      //print("DataReceived: " + data);
     }, onDone: () async {
       setState(() {
         downloading = false;
         _isDisable = false;
       });
-      print("Task Done");
+      //print("Task Done");
     }, onError: (error) {
       setState(() {
         downloading = false;
         _isDisable = true;
       });
-      print("Some Error");
+     // print("Some Error");
     });
   }
 

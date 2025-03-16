@@ -173,7 +173,7 @@ class _CategoryState extends State<Category> {
                         key: const Key('loading indicator'),
                         onVisibilityChanged: (VisibilityInfo info) {
                           if (info.visibleFraction > 0.8) {
-                            print('loading more data');
+                           // print('loading more data');
                             loadMoreWallpapers();
                           }
                         },

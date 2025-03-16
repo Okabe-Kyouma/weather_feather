@@ -12,7 +12,7 @@ class SetAsW extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Si(
       height: MediaQuery.of(context).size.height / 3,
       width: double.infinity,
       child: Column(
@@ -23,14 +23,14 @@ class SetAsW extends StatelessWidget {
               Navigator.pop(context);
             },
             child: Container(
-              margin: EdgeInsets.only(bottom: 30),
-              child: Icon(
+              margin: const EdgeInsets.only(bottom: 30),
+              child: const Icon(
                 Icons.cancel_outlined,
                 size: 50,
               ),
             ),
           ),
-          Text(
+          const Text(
             'Set Wallpaper',
             style: TextStyle(fontSize: 22),
           ),

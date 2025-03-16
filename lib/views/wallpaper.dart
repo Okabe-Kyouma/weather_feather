@@ -20,7 +20,6 @@ class MyWallpaper extends StatefulWidget {
 class _WallpaperState extends State<MyWallpaper> {
   String home = "Home Screen", lock = "Lock Screen";
   String res = "Waiting to download...";
-  bool _isDisable = true;
   bool downloading = false;
   late Stream<String> progressString;
 
@@ -43,29 +42,27 @@ class _WallpaperState extends State<MyWallpaper> {
           setState(() {
             res = data;
           });
-          print("Downloading: $data");
+          //print("Downloading: $data");
         },
         onDone: () {
           setState(() {
             downloading = false;
-            _isDisable = false;
           });
           showModal();
-          print("Download Completed ✅");
+         // print("Download Completed ✅");
         },
         onError: (error) {
           setState(() {
             downloading = false;
-            _isDisable = true;
           });
           showSnackbar("Download Failed! ❌ Check your internet.");
-          print("Download Error ❌: $error");
+          //print("Download Error ❌: $error");
         },
       );
     } catch (e) {
       setState(() => downloading = false);
       showSnackbar("Unexpected error: $e");
-      print("Exception Occurred: $e");
+      //print("Exception Occurred: $e");
     }
   }
 
@@ -104,7 +101,7 @@ class _WallpaperState extends State<MyWallpaper> {
               Fluttertoast.showToast(
                   msg: "Failed to set wallpaper ❌",
                   toastLength: Toast.LENGTH_LONG);
-              print("Wallpaper Error: $e");
+             // print("Wallpaper Error: $e");
             }
           },
           onLockScreen: () async {
@@ -131,7 +128,7 @@ class _WallpaperState extends State<MyWallpaper> {
               Fluttertoast.showToast(
                   msg: "Failed to set wallpaper ❌",
                   toastLength: Toast.LENGTH_LONG);
-              print("Wallpaper Error: $e");
+              //print("Wallpaper Error: $e");
             }
           },
         );
@@ -169,20 +166,20 @@ class _WallpaperState extends State<MyWallpaper> {
   }
 
   void saveImageFromUrl(String imageUrl) async {
-    print("asking for permission");
+    //print("asking for permission");
 
     PermissionStatus request = await Permission.photos.request();
 
-    print("asked for permission");
+    //print("asked for permission");
 
     if (request.isDenied) {
       showSnackbar("Please Provide Storage Permission In Settings");
-      print("denied");
+      //print("denied");
       return;
     }
 
     if (request.isGranted) {
-      print("granted");
+     //print("granted");
       try {
         Dio dio = Dio();
 
@@ -243,7 +240,7 @@ class _WallpaperState extends State<MyWallpaper> {
                   icon: Icons.photo,
                   text: "Save in Gallery",
                   onTap: () {
-                    print('this envoking');
+                    //print('this envoking');
                     saveImageFromUrl(widget.img);
                   },
                 ),
