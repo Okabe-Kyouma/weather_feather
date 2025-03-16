@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wallpaper/wallpaper.dart';
-import 'package:weather_feather/views/SetAsW';
+import 'package:weather_feather/views/SetAsW.dart';
 
 class MyWallpaper extends StatefulWidget {
   const MyWallpaper({super.key, required this.img});
@@ -19,7 +20,7 @@ class _WallpaperState extends State<MyWallpaper> {
   late Stream<String> progressString;
 
   Future<void> downloadImage(BuildContext context, String url) async {
-    if (downloading) return; // Prevent multiple clicks
+    if (downloading) return;
 
     try {
       setState(() {
@@ -72,6 +73,17 @@ class _WallpaperState extends State<MyWallpaper> {
       builder: (context) {
         return SetAsW(
           onHomeScreen: () async {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.black,
+                    ),
+                  );
+                  ;
+                });
+
             try {
               await Wallpaper.homeScreen(
                 options: RequestSizeOptions.resizeFit,
@@ -79,23 +91,42 @@ class _WallpaperState extends State<MyWallpaper> {
                 location: DownloadLocation.applicationDirectory,
                 height: height,
               );
-              showSnackbar("Wallpaper Set ✅");
+              Navigator.pop(context);
+
+              Fluttertoast.showToast(
+                  msg: "Wallpaper Set ✅", toastLength: Toast.LENGTH_LONG);
             } catch (e) {
-              showSnackbar("Failed to set wallpaper ❌");
+              Fluttertoast.showToast(
+                  msg: "Failed to set wallpaper ❌",
+                  toastLength: Toast.LENGTH_LONG);
               print("Wallpaper Error: $e");
             }
           },
           onLockScreen: () async {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.black,
+                    ),
+                  );
+                });
             try {
               await Wallpaper.lockScreen(
                 location: DownloadLocation.applicationDirectory,
                 width: width,
                 height: height,
               );
-              showSnackbar("Lock Screen Set ✅");
+              Navigator.pop(context);
+
+              Fluttertoast.showToast(
+                  msg: "Wallpaper Set ✅", toastLength: Toast.LENGTH_LONG);
             } catch (e) {
-              showSnackbar("Failed to set lock screen ❌");
-              print("Lock Screen Error: $e");
+              Fluttertoast.showToast(
+                  msg: "Failed to set wallpaper ❌",
+                  toastLength: Toast.LENGTH_LONG);
+              print("Wallpaper Error: $e");
             }
           },
         );
@@ -116,7 +147,7 @@ class _WallpaperState extends State<MyWallpaper> {
       height: 120.0,
       width: 200.0,
       child: Card(
-        color: Colors.black,
+        color: Colors.black45,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -149,7 +180,7 @@ class _WallpaperState extends State<MyWallpaper> {
             ),
           ),
           Positioned(
-            bottom: 50,
+            bottom: 60,
             left: 0,
             right: 0,
             child: Row(
@@ -172,6 +203,30 @@ class _WallpaperState extends State<MyWallpaper> {
                 ),
               ],
             ),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).size.height / 1.06,
+            left: MediaQuery.of(context).size.width / 2.5,
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                padding: const EdgeInsets.only(bottom: 30),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Close',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
           ),
           if (downloading) Center(child: imageDownloadDialog()),
         ],

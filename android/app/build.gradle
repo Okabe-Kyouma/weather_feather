@@ -6,8 +6,8 @@ plugins {
 }
 
 android {
-    namespace = "com.example.weather_feather"
-    compileSdk = flutter.compileSdkVersion
+    namespace "com.example.weather_feather"
+    compileSdk = 34
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

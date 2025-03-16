@@ -77,11 +77,14 @@ class _SearchState extends State<Search> {
   }
 
   void loadMoreWallpapers() async {
-    page++;
+    String qs = widget.searchQuery;
+
+   
     try {
+       page++;
       dio.options.headers['Authorization'] = apiKey;
       final response = await dio
-          .get('https://api.pexels.com/v1/curated?page=$page&per_page=14');
+          .get('https://api.pexels.com/v1/search?query=$qs&page=$page&per_page=14');
 
       response.data["photos"].forEach((ele) {
         SrcModel src = SrcModel(

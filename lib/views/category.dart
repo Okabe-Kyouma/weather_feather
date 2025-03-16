@@ -78,11 +78,12 @@ class _CategoryState extends State<Category> {
   }
 
   void loadMoreWallpapers() async {
+     String qs = widget.category;
     page++;
     try {
       dio.options.headers['Authorization'] = apiKey;
       final response = await dio
-          .get('https://api.pexels.com/v1/curated?page=$page&per_page=14');
+          .get('https://api.pexels.com/v1/search?query=$qs&page=$page&per_page=14');
 
       response.data["photos"].forEach((ele) {
         SrcModel src = SrcModel(
