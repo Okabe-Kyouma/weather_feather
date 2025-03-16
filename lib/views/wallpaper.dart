@@ -1,5 +1,10 @@
+import 'dart:typed_data';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:saver_gallery/saver_gallery.dart';
 import 'package:wallpaper/wallpaper.dart';
 import 'package:weather_feather/views/SetAsW.dart';
 
@@ -163,6 +168,46 @@ class _WallpaperState extends State<MyWallpaper> {
     );
   }
 
+  void saveImageFromUrl(String imageUrl) async {
+    print("asking for permission");
+
+    PermissionStatus request = await Permission.photos.request();
+
+    print("asked for permission");
+
+    if (request.isDenied) {
+      showSnackbar("Please Provide Storage Permission In Settings");
+      print("denied");
+      return;
+    }
+
+    if (request.isGranted) {
+      print("granted");
+      try {
+        Dio dio = Dio();
+
+        Response response = await dio.get(
+          imageUrl,
+          options: Options(responseType: ResponseType.bytes),
+        );
+
+        Uint8List imageData = Uint8List.fromList(response.data);
+
+        final result = await SaverGallery.saveImage(
+          imageData,
+          quality: 100,
+          fileName: "saved_image",
+          androidRelativePath: "Pictures/appName/images",
+          skipIfExists: false,
+        );
+
+        showSnackbar("Image saved successfully! 🎉");
+      } catch (e) {
+        showSnackbar("Error: $e");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,7 +243,8 @@ class _WallpaperState extends State<MyWallpaper> {
                   icon: Icons.photo,
                   text: "Save in Gallery",
                   onTap: () {
-                    showSnackbar("Feature not implemented! 🛠");
+                    print('this envoking');
+                    saveImageFromUrl(widget.img);
                   },
                 ),
               ],

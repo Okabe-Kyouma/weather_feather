@@ -6,6 +6,7 @@
     <application
         android:label="weather_feather"
         android:requestLegacyExternalStorage="true"
+        android:enableOnBackInvokedCallback="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
